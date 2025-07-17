@@ -9,14 +9,22 @@ import {
   Star,
   Shield,
   ArrowRight,
+  User,
+  LogOut,
+  ChevronDown,
 } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "../ui/Button";
+import { Link } from "react-router-dom";
+import { useAuth } from "../../hooks/useAuth";
 
 export const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const userMenuRef = useRef<HTMLDivElement>(null);
   const { scrollY } = useScroll();
+  const { user, isAuthenticated, logout } = useAuth();
 
   // Parallax effect for header
   const headerY = useTransform(scrollY, [0, 300], [0, -50]);
@@ -30,6 +38,31 @@ export const Header = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  // Close user menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        userMenuRef.current &&
+        !userMenuRef.current.contains(event.target as Node)
+      ) {
+        setIsUserMenuOpen(false);
+      }
+    };
+
+    if (isUserMenuOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isUserMenuOpen]);
+
+  const handleLogout = async () => {
+    await logout();
+    setIsUserMenuOpen(false);
+  };
 
   const menuItems = [
     { label: "Features", href: "#features", icon: Sparkles },
@@ -327,23 +360,68 @@ export const Header = () => {
             ))}
           </div>
 
-          {/* Enhanced CTA Buttons */}
+          {/* Enhanced CTA Buttons / User Profile */}
           <div className="hidden md:flex items-center space-x-4">
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.8, duration: 0.6 }}
-              whileHover={{ scale: 1.02, y: -1 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              <Button
-                variant="ghost"
-                size="sm"
-                className="text-white hover:text-white hover:bg-gray-800/50 border-gray-700/50"
-              >
-                Sign In
-              </Button>
-            </motion.div>
+            {isAuthenticated ? (
+              // User Profile Section
+              <div className="relative" ref={userMenuRef}>
+                <button
+                  onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                  className="flex items-center space-x-2 text-white hover:text-gray-200 transition-colors p-2 rounded-lg hover:bg-gray-800/50"
+                >
+                  <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                    <User className="w-4 h-4 text-white" />
+                  </div>
+                  <span className="text-sm font-medium">{user?.name}</span>
+                  <ChevronDown className="w-4 h-4" />
+                </button>
+
+                {/* User Dropdown Menu */}
+                {isUserMenuOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white/10 backdrop-blur-xl border border-white/20 rounded-lg shadow-xl z-50">
+                    <div className="p-3 border-b border-white/10">
+                      <p className="text-white text-sm font-medium">
+                        {user?.name}
+                      </p>
+                      <p className="text-gray-300 text-xs">{user?.email}</p>
+                    </div>
+                    <button
+                      onClick={handleLogout}
+                      className="w-full flex items-center space-x-2 px-3 py-2 text-gray-300 hover:text-white hover:bg-red-600/20 transition-colors text-sm"
+                    >
+                      <LogOut className="w-4 h-4" />
+                      <span>Sign Out</span>
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              // Auth Buttons for non-authenticated users
+              <>
+                <div>
+                  <Link to="/login">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="text-white hover:text-white hover:bg-gray-800/50 border-gray-700/50"
+                    >
+                      Sign In
+                    </Button>
+                  </Link>
+                </div>
+
+                <div>
+                  <Link to="/signup">
+                    <Button
+                      size="sm"
+                      className="bg-blue-600 hover:bg-blue-700 text-white font-semibold"
+                    >
+                      Sign Up
+                    </Button>
+                  </Link>
+                </div>
+              </>
+            )}
           </div>
 
           {/* Ultra-Enhanced Mobile Menu Button */}

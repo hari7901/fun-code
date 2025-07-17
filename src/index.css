@@ -2,14 +2,21 @@
 @import "tailwindcss";
 
 @layer base {
-  html {
-    scroll-behavior: smooth;
-  }
 
   body {
     font-family: "Inter", system-ui, sans-serif;
     font-feature-settings: "rlig" 1, "calt" 1;
-    overscroll-behavior: none;
+
+  }
+
+
+  main {
+    margin: 0;
+    padding: 0;
+  }
+
+  section {
+    margin: 0;
   }
 
   * {

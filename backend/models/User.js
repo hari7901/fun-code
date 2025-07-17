@@ -52,26 +52,28 @@ const userSchema = new mongoose.Schema(
       type: Date,
       select: false,
     },
-    refreshTokens: [
-      {
-        token: {
-          type: String,
-          required: true,
-          select: false,
+    refreshTokens: {
+      type: [
+        {
+          token: {
+            type: String,
+            required: true,
+          },
+          createdAt: {
+            type: Date,
+            default: Date.now,
+            expires: 2592000, // 30 days in seconds
+          },
+          userAgent: {
+            type: String,
+          },
+          ipAddress: {
+            type: String,
+          },
         },
-        createdAt: {
-          type: Date,
-          default: Date.now,
-          expires: 2592000, // 30 days in seconds
-        },
-        userAgent: {
-          type: String,
-        },
-        ipAddress: {
-          type: String,
-        },
-      },
-    ],
+      ],
+      select: false,
+    },
     isActive: {
       type: Boolean,
       default: true,
@@ -154,6 +156,11 @@ userSchema.methods.generateTokens = function (userAgent = "", ipAddress = "") {
   const accessToken = this.generateAccessToken();
   const refreshToken = this.generateRefreshToken();
 
+  // Ensure refreshTokens array exists
+  if (!this.refreshTokens) {
+    this.refreshTokens = [];
+  }
+
   // Add refresh token to user's refresh tokens array
   this.refreshTokens.push({
     token: refreshToken,
@@ -169,6 +176,10 @@ userSchema.methods.generateTokens = function (userAgent = "", ipAddress = "") {
 
 // Instance method to remove refresh token
 userSchema.methods.removeRefreshToken = function (refreshToken) {
+  if (!this.refreshTokens) {
+    this.refreshTokens = [];
+    return;
+  }
   this.refreshTokens = this.refreshTokens.filter(
     (tokenObj) => tokenObj.token !== refreshToken
   );

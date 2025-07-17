@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { Button } from "../ui/Button";
 import { useRef } from "react";
+import { Link } from "react-router-dom";
 
 export const HeroSection = () => {
   const ref = useRef(null);
@@ -42,7 +43,7 @@ export const HeroSection = () => {
   return (
     <section
       ref={ref}
-      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-black via-gray-950 to-black"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden"
     >
       {/* Elegant Background */}
       <div className="absolute inset-0">
@@ -119,14 +120,14 @@ export const HeroSection = () => {
         </motion.div>
       ))}
 
-      <div className="container mx-auto px-6 relative z-10 max-w-7xl">
-        <div className="grid lg:grid-cols-2 gap-20 items-center min-h-[85vh]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 pt-28 sm:pt-32 lg:pt-0">
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center min-h-[calc(100vh-10rem)] sm:min-h-[calc(100vh-12rem)] lg:min-h-[85vh]">
           {/* Left Column - Clean Content */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, ease: "easeOut" }}
-            className="text-center lg:text-left space-y-8"
+            className="text-center lg:text-left space-y-6 sm:space-y-8"
           >
             {/* Elegant badge */}
             <motion.div
@@ -151,26 +152,12 @@ export const HeroSection = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: 0.4, duration: 0.8 }}
-              className="text-5xl md:text-6xl lg:text-7xl font-bold leading-tight"
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight"
             >
-              <span className="text-white">Email Made</span>
-              <br />
-              <motion.span
-                className="bg-gradient-to-r from-blue-400 via-purple-400 to-emerald-400 bg-clip-text text-transparent"
-                animate={{
-                  backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
-                }}
-                transition={{
-                  duration: 6,
-                  repeat: Infinity,
-                  ease: "linear",
-                }}
-                style={{
-                  backgroundSize: "200% 200%",
-                }}
-              >
+              <span className="text-white">Email Made </span>
+              <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-emerald-400 bg-clip-text text-transparent">
                 Effortless
-              </motion.span>
+              </span>
             </motion.h1>
 
             {/* Clean subtitle */}
@@ -196,21 +183,23 @@ export const HeroSection = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.98 }}
               >
-                <Button
-                  variant="gradient"
-                  size="xl"
-                  className="group bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-xl hover:shadow-2xl"
-                >
-                  <span className="flex items-center gap-2">
-                    Get Started Free
-                    <motion.div
-                      animate={{ x: [0, 4, 0] }}
-                      transition={{ duration: 2, repeat: Infinity }}
-                    >
-                      <ArrowRight className="h-5 w-5" />
-                    </motion.div>
-                  </span>
-                </Button>
+                <Link to="/signup">
+                  <Button
+                    variant="gradient"
+                    size="lg"
+                    className="group bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-xl hover:shadow-2xl w-full sm:w-auto"
+                  >
+                    <span className="flex items-center gap-2">
+                      Get Started Free
+                      <motion.div
+                        animate={{ x: [0, 4, 0] }}
+                        transition={{ duration: 2, repeat: Infinity }}
+                      >
+                        <ArrowRight className="h-5 w-5" />
+                      </motion.div>
+                    </span>
+                  </Button>
+                </Link>
               </motion.div>
 
               <motion.div
@@ -219,8 +208,8 @@ export const HeroSection = () => {
               >
                 <Button
                   variant="outline"
-                  size="xl"
-                  className="border-slate-600 text-slate-300 hover:bg-white hover:border-slate-500"
+                  size="lg"
+                  className="border-slate-600 text-slate-300 hover:bg-white hover:border-slate-500 w-full sm:w-auto"
                 >
                   <span className="flex items-center gap-2">
                     <Play className="h-5 w-5" />
@@ -235,7 +224,7 @@ export const HeroSection = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: 1, duration: 0.8 }}
-              className="flex items-center justify-center lg:justify-start gap-12 pt-8 border-t border-slate-700/50"
+              className="flex items-center justify-center lg:justify-start gap-6 sm:gap-8 lg:gap-12 pt-8 border-t border-slate-700/50"
             >
               {[
                 { value: "50K+", label: "Users" },
@@ -282,7 +271,7 @@ export const HeroSection = () => {
               className="relative"
               style={{ transformStyle: "preserve-3d" }}
             >
-              <div className="w-[440px] h-[580px] bg-gradient-to-br from-gray-900/95 to-black/95 backdrop-blur-2xl border border-purple-500/30 rounded-3xl shadow-2xl overflow-hidden relative">
+              <div className="w-full max-w-[320px] sm:max-w-[380px] md:max-w-[440px] h-[480px] sm:h-[520px] md:h-[580px] bg-gradient-to-br from-gray-900/95 to-black/95 backdrop-blur-2xl border border-purple-500/30 rounded-3xl shadow-2xl overflow-hidden relative">
                 {/* Holographic Glow Effect */}
                 <motion.div
                   animate={{
@@ -298,7 +287,7 @@ export const HeroSection = () => {
                 />
 
                 {/* Dynamic Status Bar */}
-                <div className="p-4 border-b border-gray-700/50 bg-gradient-to-r from-gray-900/80 to-gray-800/80">
+                <div className="p-3 sm:p-4 border-b border-gray-700/50 bg-gradient-to-r from-gray-900/80 to-gray-800/80">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <motion.div
@@ -323,7 +312,7 @@ export const HeroSection = () => {
                         <Brain className="h-4 w-4 text-white" />
                       </motion.div>
                       <div>
-                        <h3 className="text-white font-bold text-lg">
+                        <h3 className="text-white font-bold text-base sm:text-lg">
                           SmartMail AI
                         </h3>
                         <motion.div
@@ -374,7 +363,7 @@ export const HeroSection = () => {
                 </div>
 
                 {/* AI Processing Center */}
-                <div className="p-6">
+                <div className="p-4 sm:p-6">
                   {/* Real-time Analytics */}
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
@@ -677,13 +666,13 @@ export const HeroSection = () => {
                   x: { duration: 6, repeat: Infinity, ease: "easeInOut" },
                   y: { duration: 5, repeat: Infinity, ease: "easeInOut" },
                 }}
-                className="absolute -top-8 -right-8 w-16 h-16 bg-gradient-to-br from-purple-500/20 to-blue-500/20 backdrop-blur-xl border border-purple-400/40 rounded-3xl flex items-center justify-center"
+                className="absolute -top-6 -right-6 sm:-top-8 sm:-right-8 w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-purple-500/20 to-blue-500/20 backdrop-blur-xl border border-purple-400/40 rounded-2xl sm:rounded-3xl items-center justify-center hidden sm:flex"
               >
                 <motion.div
                   animate={{ scale: [1, 1.3, 1] }}
                   transition={{ duration: 2, repeat: Infinity }}
                 >
-                  <Brain className="h-8 w-8 text-purple-400" />
+                  <Brain className="h-6 w-6 sm:h-8 sm:w-8 text-purple-400" />
                 </motion.div>
               </motion.div>
 
@@ -700,13 +689,13 @@ export const HeroSection = () => {
                   x: { duration: 7, repeat: Infinity, ease: "easeInOut" },
                   y: { duration: 4, repeat: Infinity, ease: "easeInOut" },
                 }}
-                className="absolute -bottom-8 -left-8 w-16 h-16 bg-gradient-to-br from-emerald-500/20 to-blue-500/20 backdrop-blur-xl border border-emerald-400/40 rounded-3xl flex items-center justify-center"
+                className="absolute -bottom-6 -left-6 sm:-bottom-8 sm:-left-8 w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-emerald-500/20 to-blue-500/20 backdrop-blur-xl border border-emerald-400/40 rounded-2xl sm:rounded-3xl items-center justify-center hidden sm:flex"
               >
                 <motion.div
                   animate={{ rotate: [0, 180, 360] }}
                   transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
                 >
-                  <Zap className="h-8 w-8 text-emerald-400" />
+                  <Zap className="h-6 w-6 sm:h-8 sm:w-8 text-emerald-400" />
                 </motion.div>
               </motion.div>
 
@@ -723,13 +712,13 @@ export const HeroSection = () => {
                   x: { duration: 8, repeat: Infinity, ease: "easeInOut" },
                   y: { duration: 6, repeat: Infinity, ease: "easeInOut" },
                 }}
-                className="absolute top-1/2 -right-6 w-12 h-12 bg-gradient-to-br from-orange-500/20 to-red-500/20 backdrop-blur-xl border border-orange-400/40 rounded-2xl flex items-center justify-center"
+                className="absolute top-1/2 -right-4 sm:-right-6 w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-orange-500/20 to-red-500/20 backdrop-blur-xl border border-orange-400/40 rounded-xl sm:rounded-2xl items-center justify-center hidden sm:flex"
               >
                 <motion.div
                   animate={{ scale: [1, 1.4, 1] }}
                   transition={{ duration: 2.5, repeat: Infinity }}
                 >
-                  <MessageSquare className="h-6 w-6 text-orange-400" />
+                  <MessageSquare className="h-5 w-5 sm:h-6 sm:w-6 text-orange-400" />
                 </motion.div>
               </motion.div>
             </motion.div>

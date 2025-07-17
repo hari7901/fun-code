@@ -3,36 +3,50 @@ const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 
 // Helper function to create and send tokens
-const createSendTokens = (user, statusCode, res, message = "Success", req) => {
-  // Get user agent and IP for refresh token
-  const userAgent = req.get("User-Agent") || "";
-  const ipAddress = req.ip || req.connection.remoteAddress || "";
+const createSendTokens = async (
+  user,
+  statusCode,
+  res,
+  message = "Success",
+  req
+) => {
+  try {
+    // Get user agent and IP for refresh token
+    const userAgent = req.get("User-Agent") || "";
+    const ipAddress = req.ip || req.connection.remoteAddress || "";
 
-  // Generate access and refresh tokens
-  const { accessToken, refreshToken } = user.generateTokens(
-    userAgent,
-    ipAddress
-  );
+    // Generate access and refresh tokens
+    const { accessToken, refreshToken } = user.generateTokens(
+      userAgent,
+      ipAddress
+    );
 
-  // Remove sensitive data from output
-  user.password = undefined;
-  user.refreshTokens = undefined;
+    // Save user with new refresh token
+    await user.save({ validateBeforeSave: false });
 
-  res.status(statusCode).json({
-    success: true,
-    message,
-    data: {
-      user,
-      accessToken,
-      refreshToken,
-      tokenInfo: {
-        accessTokenExpiry: "15 minutes",
-        refreshTokenExpiry: "30 days",
-        securityTip:
-          "Store refresh token securely, use access token for API calls",
+    // Remove sensitive data from output
+    user.password = undefined;
+    user.refreshTokens = undefined;
+
+    res.status(statusCode).json({
+      success: true,
+      message,
+      data: {
+        user,
+        accessToken,
+        refreshToken,
+        tokenInfo: {
+          accessTokenExpiry: "15 minutes",
+          refreshTokenExpiry: "30 days",
+          securityTip:
+            "Store refresh token securely, use access token for API calls",
+        },
       },
-    },
-  });
+    });
+  } catch (error) {
+    console.error("Error in createSendTokens:", error);
+    throw error;
+  }
 };
 
 // Legacy helper for backward compatibility
@@ -82,7 +96,7 @@ const signup = async (req, res) => {
     // TODO: Send verification email
     console.log(`Email verification token: ${verificationToken}`);
 
-    createSendTokens(
+    await createSendTokens(
       user,
       201,
       res,
@@ -124,7 +138,9 @@ const login = async (req, res) => {
     }
 
     // Find user and include password field
-    const user = await User.findOne({ email }).select("+password");
+    const user = await User.findOne({ email }).select(
+      "+password +refreshTokens"
+    );
 
     if (!user) {
       return res.status(401).json({
@@ -150,7 +166,7 @@ const login = async (req, res) => {
       });
     }
 
-    createSendTokens(user, 200, res, "Login successful", req);
+    await createSendTokens(user, 200, res, "Login successful", req);
   } catch (error) {
     console.error("Login error:", error);
     res.status(500).json({

@@ -195,11 +195,7 @@ export const FeaturesSection = () => {
   ];
 
   return (
-    <section
-      ref={ref}
-      id="features"
-      className="relative bg-gradient-to-br from-black via-gray-950 to-black py-24 overflow-hidden"
-    >
+    <section ref={ref} id="features" className="relative pt-24 overflow-hidden">
       {/* Background Elements */}
       <div className="absolute inset-0">
         <motion.div
