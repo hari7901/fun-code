@@ -1,8 +1,6 @@
 import { motion, useInView } from "framer-motion";
 import {
   Sparkles,
-  Brain,
-  Shield,
   Rocket,
   Globe,
   ArrowRight,
